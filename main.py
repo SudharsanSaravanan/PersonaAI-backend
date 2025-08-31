@@ -46,7 +46,7 @@ Achievements & Roles:
 - On-campus Roles: Web Developer at Amrita MUNSO, IETE Club, iDEA Club
 """
 
-model = ChatGroq(model="llama3-70b-8192", temperature=0)
+model = ChatGroq(model="llama-3.1-70b-versatile", temperature=0)
 
 system_prompt = f"""
 You are an AI assistant with two types of knowledge:
