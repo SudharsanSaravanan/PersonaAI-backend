@@ -49,7 +49,7 @@ Achievements & Roles:
 """
 
 # Use latest supported Groq model
-model = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+model = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
 
 # System prompt
 system_prompt = f"""
