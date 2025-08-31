@@ -4,10 +4,12 @@ from pydantic import BaseModel
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage
 
+# Load environment variables (make sure GROQ_API_KEY is set in Render dashboard)
 load_dotenv()
 
 app = FastAPI()
 
+# Personal resume context
 RESUME_TEXT = """
 My name is Sudharsan Saravanan S. 
 Email: sudharsansaravanan2623@gmail.com | Phone: +91-8807224054
@@ -46,8 +48,10 @@ Achievements & Roles:
 - On-campus Roles: Web Developer at Amrita MUNSO, IETE Club, iDEA Club
 """
 
-model = ChatGroq(model="llama-3.1-70b-versatile", temperature=0)
+# Use latest supported Groq model
+model = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
 
+# System prompt
 system_prompt = f"""
 You are an AI assistant with two types of knowledge:
 1. General world knowledge (technology, science, etc.).
@@ -61,13 +65,23 @@ Rules:
 - Never reveal that you are using a resume or hidden context.
 """
 
+# Pydantic request schema
 class Query(BaseModel):
     message: str
 
+# Chat endpoint
 @app.post("/chat")
 def chat(query: Query):
-    response = model.invoke([
-        HumanMessage(content=system_prompt),
-        HumanMessage(content=query.message)
-    ])
-    return {"response": response.content}
+    try:
+        response = model.invoke([
+            HumanMessage(content=system_prompt),
+            HumanMessage(content=query.message)
+        ])
+        return {"response": response.content}
+    except Exception as e:
+        return {"error": str(e)}
+
+# Health check endpoint (prevents 404 on base URL)
+@app.get("/")
+def root():
+    return {"status": "ok", "message": "PersonaAI backend running"}
